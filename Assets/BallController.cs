@@ -4,27 +4,47 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    
+    [SerializeField] float explosionForce = 10f;
+    private float explosionRadius = 10f;
 
+    [SerializeField] float shootForce = 5f;
+    [SerializeField]
+    float upwardsModifier = 4.0f;
 
-    [SerializeField]float ShootForce =5f;
+    private Vector3 mouseScreenPosition;
 
     void Start()
     {
-
+        mouseScreenPosition = Input.mousePosition;
     }
 
     void Update()
     {
+        
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Barrier") && other.collider != null && other.rigidbody == null)
+        {
+            ApplyForce();
+        }
+    }
+
+    void ApplyForce()
+    {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 mouseScreenPosition = Input.mousePosition;
+            Ray ray = Camera.main.ScreenPointToRay(mouseScreenPosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit))
             {
                 if (hit.rigidbody != null)
                 {
-                    hit.rigidbody.AddForceAtPosition(ray.direction * ShootForce, hit.point);
+                    hit.rigidbody.AddExplosionForce(explosionForce, hit.point, explosionRadius, upwardsModifier);
                 }
             }
         }
