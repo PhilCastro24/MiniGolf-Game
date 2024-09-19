@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-
+    Rigidbody rb;
 
     [SerializeField]float ShootForce =5f;
 
     void Start()
     {
-
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -27,6 +27,14 @@ public class BallController : MonoBehaviour
                     hit.rigidbody.AddForceAtPosition(ray.direction * ShootForce, hit.point);
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Barrier"))
+        {
+            rb.AddForce(new Vector3(10,10,10), ForceMode.Impulse);
         }
     }
 }
