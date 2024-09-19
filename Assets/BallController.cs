@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    Rigidbody rb;
+
 
     [SerializeField]float ShootForce =5f;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+
     }
 
     void Update()
@@ -22,7 +22,10 @@ public class BallController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                hit.rigidbody.AddForceAtPosition(ray.direction * ShootForce, hit.point);
+                if (hit.rigidbody != null)
+                {
+                    hit.rigidbody.AddForceAtPosition(ray.direction * ShootForce, hit.point);
+                }
             }
         }
     }
