@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    
-    [SerializeField] float explosionForce = 10f;
-    private float explosionRadius = 10f;
-
-    [SerializeField] float shootForce = 5f;
-    [SerializeField]
-    float upwardsModifier = 4.0f;
+    Rigidbody rb;
 
     private Vector3 mouseScreenPosition;
 
     void Start()
     {
-        mouseScreenPosition = Input.mousePosition;
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -47,6 +41,14 @@ public class BallController : MonoBehaviour
                     hit.rigidbody.AddExplosionForce(explosionForce, hit.point, explosionRadius, upwardsModifier);
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Barrier"))
+        {
+            rb.AddForce(new Vector3(10,10,10), ForceMode.Impulse);
         }
     }
 }
