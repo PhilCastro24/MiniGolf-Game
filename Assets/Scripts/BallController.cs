@@ -8,15 +8,21 @@ public class BallController : MonoBehaviour
 
     [SerializeField]float ShootForce =5f;
 
+    public float drag = 0.5f;
+
+    bool isMoving = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.drag = drag;
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)&&!isMoving)
         {
+            StartCoroutine(StopBall());
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -30,11 +36,19 @@ public class BallController : MonoBehaviour
         }
     }
 
+    IEnumerator StopBall()
+    {
+        isMoving = true;
+        yield return new WaitForSeconds(3);
+        rb.angularVelocity = Vector3.zero;
+        isMoving = false;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Barrier"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
-            rb.AddForce(new Vector3(10,10,10), ForceMode.Impulse);
+            rb.AddForce(new Vector3(5,3,5), ForceMode.Impulse);
         }
     }
 }

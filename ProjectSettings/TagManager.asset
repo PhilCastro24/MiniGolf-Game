@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Barrier
   - Goal
+  - Obstacle
   layers:
   - Default
   - TransparentFX
