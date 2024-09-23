@@ -7,8 +7,7 @@ public class BallController : MonoBehaviour
     Rigidbody rb;
 
     [SerializeField]float ShootForce =5f;
-
-    public float drag = 0.5f;
+    [SerializeField ]float drag = 0.5f;
 
     bool isMoving = false;
 
@@ -16,13 +15,14 @@ public class BallController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.drag = drag;
+        rb.angularDrag = drag;
+
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)&&!isMoving)
+        if (Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(StopBall());
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
@@ -34,14 +34,6 @@ public class BallController : MonoBehaviour
                 }
             }
         }
-    }
-
-    IEnumerator StopBall()
-    {
-        isMoving = true;
-        yield return new WaitForSeconds(3);
-        rb.angularVelocity = Vector3.zero;
-        isMoving = false;
     }
 
     private void OnCollisionEnter(Collision collision)
