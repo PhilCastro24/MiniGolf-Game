@@ -20,6 +20,7 @@ public class BallController : MonoBehaviour, IPointerDownHandler
     private Vector3 forceDirection;
     private Ray ray;
     private Plane plane;
+    private bool wasMoving = false; // Added variable
 
     public bool ShootingMode => shootingMode;
     public int ShootCount => shootCount;
@@ -109,6 +110,17 @@ public class BallController : MonoBehaviour, IPointerDownHandler
         {
             rb.velocity = Vector3.zero;
         }
+
+        // Detect when the ball has just stopped moving
+        if (wasMoving && !IsMoving())
+        {
+            // The ball has just stopped moving
+            // Re-set the value of the slider back to 0
+            powerSlider.value = 0;
+        }
+
+        // Update wasMoving for the next frame
+        wasMoving = IsMoving();
     }
 
     public void Penalty()
