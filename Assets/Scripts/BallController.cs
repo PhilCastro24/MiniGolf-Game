@@ -4,21 +4,30 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
 
     [SerializeField] float shootForce = 5f;
     [SerializeField] float drag = 0.5f;
-    [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
+    [SerializeField] LineRenderer aimLine;
 
+    float forceFactor;
+    //bool shootingMode;
 
     void Start()
     {
+        aimLine.gameObject.SetActive(false);
         rb = GetComponent<Rigidbody>();
         rb.drag = drag;
         rb.angularDrag = drag;
     }
 
     void Update()
+    {
+        ApplyForce();
+        BallLaunch();
+    }
+
+    void ApplyForce()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -35,11 +44,30 @@ public class BallController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void BallLaunch()
     {
-        if (collision.gameObject.CompareTag("Obstacle"))
+        //if (shootingMode)
+        //{
+        if (Input.GetMouseButtonDown(0))
         {
-            rb.AddForce(collisionImpulse, ForceMode.Impulse);
+            aimLine.gameObject.SetActive(true);
+
+            var ballScreenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+            var mouseScreenPos = Input.mousePosition;
+            ballScreenPos.z = 1f;
+            mouseScreenPos.z = 1f;
+            var positions = new Vector3[] {
+                    Camera.main.ScreenToWorldPoint(ballScreenPos),
+                    Camera.main.ScreenToWorldPoint(mouseScreenPos)
+                };
+            aimLine.SetPositions(positions);
+            aimLine.endColor = Color.Lerp(Color.green, Color.red, forceFactor);
+            //}
+            /*else if (Input.GetMouseButtonUp(0))
+            {
+                shootingMode = false;
+                aimLine.gameObject.SetActive(false);
+            }*/
         }
     }
 }
