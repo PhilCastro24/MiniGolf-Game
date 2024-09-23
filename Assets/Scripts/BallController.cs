@@ -6,10 +6,10 @@ public class BallController : MonoBehaviour
 {
     Rigidbody rb;
 
-    [SerializeField]float ShootForce =5f;
-    [SerializeField ]float drag = 0.5f;
+    [SerializeField] float shootForce = 5f;
+    [SerializeField] float drag = 0.5f;
+    [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
-    bool isMoving = false;
 
     void Start()
     {
@@ -30,7 +30,7 @@ public class BallController : MonoBehaviour
             {
                 if (hit.rigidbody != null)
                 {
-                    hit.rigidbody.AddForceAtPosition(ray.direction * ShootForce, hit.point);
+                    hit.rigidbody.AddForceAtPosition(ray.direction * shootForce, hit.point);
                 }
             }
         }
@@ -40,7 +40,7 @@ public class BallController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            rb.AddForce(new Vector3(5,3,5), ForceMode.Impulse);
+            rb.AddForce(collisionImpulse, ForceMode.Impulse);
         }
     }
 }
