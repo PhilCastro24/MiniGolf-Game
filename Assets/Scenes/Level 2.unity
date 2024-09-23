@@ -257,7 +257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &176143480
 Transform:
   m_ObjectHideFlags: 0
@@ -326,7 +326,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.5
+        value: 0.05
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -678,9 +678,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca63633b38b9e924fa7bdeafd8340635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  shootForce: 5
-  drag: 0.5
+  rb: {fileID: 390298126}
+  force: 10
+  drag: 1
   aimLine: {fileID: 176143481}
 --- !u!54 &390298126
 Rigidbody:
