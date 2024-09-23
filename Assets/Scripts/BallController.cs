@@ -16,7 +16,6 @@ public class BallController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.drag = drag;
         rb.angularDrag = drag;
-
     }
 
     void Update()
