@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems; // For IPointerDownHandler
-using UnityEngine.Events;      // For UnityEvent
-using UnityEngine.UI;          // For UI elements
+using UnityEngine.UI; // For UI elements
 
-public class BallController : MonoBehaviour, IPointerDownHandler
+public class BallController : MonoBehaviour
 {
     public Rigidbody rb;
     [SerializeField] private float force = 5f;
@@ -20,11 +18,10 @@ public class BallController : MonoBehaviour, IPointerDownHandler
     private Vector3 forceDirection;
     private Ray ray;
     private Plane plane;
-    private bool wasMoving = false; // Added variable
+    private bool wasMoving = false;
 
     public bool ShootingMode => shootingMode;
     public int ShootCount => shootCount;
-    //public UnityEvent<int> OnBallShoot = new UnityEvent<int>();
 
     void Start()
     {
@@ -43,15 +40,17 @@ public class BallController : MonoBehaviour, IPointerDownHandler
         {
             // Disable aiming mechanics
             aimLine.gameObject.SetActive(false);
+            shootingMode = false; // Ensure shootingMode is false when ball is moving
             return; // Prevent further input handling
         }
 
         if (Input.GetMouseButtonDown(0))
         {
+            shootingMode = true; // Start aiming
             aimLine.gameObject.SetActive(true);
             plane = new Plane(Vector3.up, transform.position);
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && shootingMode)
         {
             // Calculate force direction
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -73,25 +72,24 @@ public class BallController : MonoBehaviour, IPointerDownHandler
             ballScreenPos.z = 1f;
             mouseScreenPos.z = 1f;
             Vector3[] positions = {
-                    Camera.main.ScreenToWorldPoint(ballScreenPos),
-                    Camera.main.ScreenToWorldPoint(mouseScreenPos)
-                };
+                Camera.main.ScreenToWorldPoint(ballScreenPos),
+                Camera.main.ScreenToWorldPoint(mouseScreenPos)
+            };
             aimLine.SetPositions(positions);
             aimLine.endColor = Color.Lerp(Color.green, Color.red, forceFactor);
             powerSlider.value = forceFactor;
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) && shootingMode)
         {
             shoot = true;
-            shootingMode = false;
+            shootingMode = false; // Stop aiming
             aimLine.gameObject.SetActive(false);
         }
 
         // Cancel shot if right-clicked
         if (Input.GetMouseButtonDown(1))
         {
-            shootingMode = false;
-            aimLine.gameObject.SetActive(false);
+            CancelShot();
         }
     }
 
@@ -132,18 +130,11 @@ public class BallController : MonoBehaviour, IPointerDownHandler
     {
         shootingMode = false;
         aimLine.gameObject.SetActive(false);
+        powerSlider.value = 0; // Reset the power slider
     }
 
     public bool IsMoving()
     {
         return rb.velocity.sqrMagnitude > 0.01f;
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        if (IsMoving())
-            return;
-
-        shootingMode = true;
     }
 }
