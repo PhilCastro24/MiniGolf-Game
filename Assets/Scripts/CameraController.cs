@@ -12,18 +12,33 @@ public class CameraController : MonoBehaviour
     private Transform cameraTransform;
     private Transform playerTransform;
 
+    // Reference to BallController script
+    public BallController ballController;
+
     void Start()
     {
         cameraTransform = virtualCamera.transform;
         playerTransform = virtualCamera.Follow;
+
+        // Optionally, find the BallController if not set in the Inspector
+        if (ballController == null)
+        {
+            ballController = FindObjectOfType<BallController>();
+        }
     }
 
     void Update()
     {
+        if (ballController != null && (ballController.IsMoving() || ballController.ShootingMode))
+        {
+            // Prevent camera rotation when the ball is moving or in shooting mode
+            return;
+        }
+
         float rotationInput = 0f;
 
-        // Mouse drag rotation (Left Mouse Button)
-        if (Input.GetMouseButton(0)) // Left mouse button is held down
+        // Mouse drag rotation (Wheel Click)
+        if (Input.GetMouseButton(2) && !ballController.ShootingMode) // Check if not in shooting mode
         {
             rotationInput += Input.GetAxis("Mouse X");
         }
