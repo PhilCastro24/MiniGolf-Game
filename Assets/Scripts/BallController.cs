@@ -100,7 +100,6 @@ public class BallController : MonoBehaviour
             shoot = false;
             rb.AddForce(forceDirection * force * forceFactor, ForceMode.Impulse);
             shootCount++;
-            // OnBallShoot.Invoke(shootCount);
         }
 
         // Stop the ball if it's nearly stationary
@@ -112,7 +111,6 @@ public class BallController : MonoBehaviour
         // Detect when the ball has just stopped moving
         if (wasMoving && !IsMoving())
         {
-            // The ball has just stopped moving
             // Re-set the value of the slider back to 0
             powerSlider.value = 0;
         }
@@ -124,6 +122,7 @@ public class BallController : MonoBehaviour
     public void Penalty()
     {
         shootCount++;
+        //
     }
 
     public void CancelShot()

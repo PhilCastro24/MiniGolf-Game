@@ -37,7 +37,7 @@ public class CameraController : MonoBehaviour
 
         float rotationInput = 0f;
 
-        // Mouse drag rotation (Left Mouse Button)
+        // Mouse drag rotation (Wheel Click)
         if (Input.GetMouseButton(2) && !ballController.ShootingMode) // Check if not in shooting mode
         {
             rotationInput += Input.GetAxis("Mouse X");
