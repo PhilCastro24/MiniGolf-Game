@@ -35,7 +35,8 @@ public class CameraController : MonoBehaviour
         // Rotate around the Y-axis
         if (Mathf.Abs(rotationInput) > 0.01f)
         {
-            cameraTransform.RotateAround(playerTransform.position, Vector3.up, rotationInput * rotationSpeed * Time.deltaTime);
+            cameraTransform.RotateAround(
+                playerTransform.position, Vector3.up, rotationInput * rotationSpeed * Time.deltaTime);
         }
     }
 }
