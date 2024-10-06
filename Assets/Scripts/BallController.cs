@@ -11,15 +11,14 @@ public class BallController : MonoBehaviour
     private bool canInteract = false;
     private bool isCharging = false;
 
-    [SerializeField] float maxPower = 100f;  // Maximale Schusskraft
+    [SerializeField] float maxPower = 100f;
     [SerializeField] float currentPower = 0f;
 
-    public Slider powerSlider;     // Slider-UI für die Schusskraft
+    public Slider powerSlider;
 
     [SerializeField] float minimumSpeed = 0.05f;
     [SerializeField] float stopThreshold = 1f;
     [SerializeField] float drag = 0.5f;
-    [SerializeField] float angularDrag = 1f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
