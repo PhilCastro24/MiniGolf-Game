@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BallController : MonoBehaviour
@@ -17,9 +18,9 @@ public class BallController : MonoBehaviour
 
     [SerializeField] float minimumSpeed = 0.05f;
     [SerializeField] float stopThreshold = 1f;
-    [SerializeField] float shootForce = 5f;
     [SerializeField] float drag = 0.5f;
     [SerializeField] float angularDrag = 1f;
+    [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
 
@@ -36,35 +37,49 @@ public class BallController : MonoBehaviour
 
     void Update()
     {
+        //if velocity and angular drag is under or equal to minSpeed then...
         if (rb.velocity.magnitude <= minimumSpeed && rb.angularVelocity.magnitude <= minimumSpeed)
         {
+            //you can interact with the ball
             canInteract = true;
         }
         else
         {
+            //othwerwise, if its higher then minSpeed. you cannot interact with the ball
             canInteract = false;
         }
 
+        //if the ball reaches a certain speed and angular drag then...
         if (rb.velocity.sqrMagnitude < stopThreshold * stopThreshold && rb.angularVelocity.sqrMagnitude < stopThreshold * stopThreshold)
         {
+            //velocity equals 0. Means it comes to a full stop
             rb.velocity = Vector3.zero;
+            //same goes for the angular drag
             rb.angularVelocity = Vector3.zero;
         }
 
         if (Input.GetMouseButtonUp(0) && isCharging && canInteract)
         {
+            //Creates a ray starting from the Camera to wherever you click with your mouse
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //a RaycastHit function will be named hit
             RaycastHit hit;
 
+            //activates the Raycast and through the ray, and saves it inside the hit variable
             if (Physics.Raycast(ray, out hit))
             {
+                //if hit.rigidbody has a value then...
                 if (hit.rigidbody != null)
                 {
+                    //it will ad a force to exactly the position you click on the object, requires the direction
+                    //multiplied with the current power and the exact position where it got hit
                     hit.rigidbody.AddForceAtPosition(ray.direction * currentPower, hit.point);
                 }
             }
+            //if nothing of the things above happend, ischaring equals false
             isCharging = false;
-            powerSlider.value = 0f;  // Sets Slider back to 0
+            // and sets Slider back to 0
+            powerSlider.value = 0f;  
         }
         //If you click on the left Mouse Button and isCharging is true...
         if (Input.GetMouseButton(0) && isCharging)
@@ -90,7 +105,12 @@ public class BallController : MonoBehaviour
             }
         }
 
+        if (transform.position.y < lowestYPos)
+        {
+            Restart();
+        }
     }
+
 
     void OnMouseDown()
     {
@@ -122,6 +142,7 @@ public class BallController : MonoBehaviour
         {
             Debug.Log("Ball still moving");
         }
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -130,6 +151,10 @@ public class BallController : MonoBehaviour
         {
             rb.AddForce(collisionImpulse, ForceMode.Impulse);
         }
+    }
+    void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }
