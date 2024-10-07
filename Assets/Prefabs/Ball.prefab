@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4589727151860226918}
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.643318, y: 3.16, z: -9.264913}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -131,7 +131,6 @@ MonoBehaviour:
   minimumSpeed: 0.05
   stopThreshold: 1
   drag: 0.5
-  angularDrag: 1
   lowestYPos: -10
   collisionImpulse: {x: 5, y: 3, z: 5}
 --- !u!135 &2928530543416830054

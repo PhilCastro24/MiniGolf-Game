@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GoalController : MonoBehaviour
 {
-    public TimerController timerController;
+    TimerController timerController;
 
     void Start()
     {
-
+        timerController = FindObjectOfType<TimerController>();
     }
 
     private void OnTriggerEnter(Collider other)

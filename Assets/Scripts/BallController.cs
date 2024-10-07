@@ -6,15 +6,8 @@ using UnityEngine.UI;
 
 public class BallController : MonoBehaviour
 {
-    Rigidbody rb;
-
-    private bool canInteract = false;
-    private bool isCharging = false;
-
     [SerializeField] float maxPower = 100f;
     [SerializeField] float currentPower = 0f;
-
-    public Slider powerSlider;
 
     [SerializeField] float minimumSpeed = 0.05f;
     [SerializeField] float stopThreshold = 1f;
@@ -22,6 +15,12 @@ public class BallController : MonoBehaviour
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
+    [SerializeField] Slider powerSlider;
+
+    private bool canInteract = false;
+    private bool isCharging = false;
+
+    Rigidbody rb;
 
     void Start()
     {
@@ -80,6 +79,7 @@ public class BallController : MonoBehaviour
             // and sets Slider back to 0
             powerSlider.value = 0f;  
         }
+
         //If you click on the left Mouse Button and isCharging is true...
         if (Input.GetMouseButton(0) && isCharging)
         {
@@ -109,7 +109,6 @@ public class BallController : MonoBehaviour
             Restart();
         }
     }
-
 
     void OnMouseDown()
     {
@@ -141,20 +140,19 @@ public class BallController : MonoBehaviour
         {
             Debug.Log("Ball still moving");
         }
-
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision other)
     {
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (other.gameObject.CompareTag("Obstacle"))
         {
             rb.AddForce(collisionImpulse, ForceMode.Impulse);
         }
     }
+
     void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
 }
 
