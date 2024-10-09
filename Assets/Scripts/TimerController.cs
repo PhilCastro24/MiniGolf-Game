@@ -16,7 +16,6 @@ public class TimerController : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             UpdateTimer();
-
         }
     }
 
@@ -25,17 +24,19 @@ public class TimerController : MonoBehaviour
         int minutes = Mathf.FloorToInt(elapsedTime / 60F);
         int seconds = Mathf.FloorToInt(elapsedTime % 60F);
 
-        timerText.text = string.Format("Zeit: {0:00}:{1:00}", minutes, seconds);
+        timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
     }
 
     public void StopTimer()
     {
         timerIsRunning = false;
     }
+
     public void StartTimer()
     {
         timerIsRunning = true;
     }
+
     public void ResetTimer()
     {
         elapsedTime = 0f;

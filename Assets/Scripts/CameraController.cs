@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-using UnityEngine.SceneManagement;
 
 public class CameraController : MonoBehaviour
 {
@@ -12,36 +11,39 @@ public class CameraController : MonoBehaviour
 
     private Transform cameraTransform;
     private Transform playerTransform;
+    public BallController ballController;
 
     void Start()
     {
         cameraTransform = virtualCamera.transform;
         playerTransform = virtualCamera.Follow;
+
+        if (ballController == null)
+        {
+            ballController = FindObjectOfType<BallController>();
+        }
     }
 
     void Update()
     {
+        if (ballController != null && (ballController.IsMoving() || ballController.isCharging))
+        {
+            return;
+        }
+
         float rotationInput = 0f;
 
-        // Mouse drag rotation (Left Mouse Button)
-        if (Input.GetMouseButton(0)) // Left mouse button is held down
+        if (Input.GetMouseButton(2))
         {
             rotationInput += Input.GetAxis("Mouse X");
         }
 
-        // Arrow keys rotation
-        float arrowInput = Input.GetAxis("Horizontal"); // Left/Right Arrow keys or A/D keys
+        float arrowInput = Input.GetAxis("Horizontal");
         rotationInput += arrowInput;
 
-        // Rotate around the Y-axis
         if (Mathf.Abs(rotationInput) > 0.01f)
         {
-            cameraTransform.RotateAround(
-                playerTransform.position, Vector3.up, rotationInput * rotationSpeed * Time.deltaTime);
+            cameraTransform.RotateAround(playerTransform.position, Vector3.up, rotationInput * rotationSpeed * Time.deltaTime);
         }
-
-
     }
-
-
 }
