@@ -13,6 +13,8 @@ public class BallController : MonoBehaviour
 
     [SerializeField] float maxPower = 100f;
     [SerializeField] float currentPower = 0f;
+    [SerializeField] float powerMultiplier = 0.1f;
+    [SerializeField] float forceMultiplier = 1f;
 
     public Slider powerSlider;
 
@@ -21,7 +23,17 @@ public class BallController : MonoBehaviour
     [SerializeField] float drag = 0.5f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
+    [SerializeField] Slider powerSlider;
 
+    private bool canInteract = false;
+    private bool isCharging = false;
+
+    private LineRenderer lineRenderer;
+
+    private Vector3 mousePressDownPos;
+    private Vector3 mouseReleasePos;
+
+    Rigidbody rb;
 
     void Start()
     {
@@ -32,6 +44,10 @@ public class BallController : MonoBehaviour
         powerSlider.minValue = 0f;
         powerSlider.maxValue = maxPower;
         powerSlider.value = 0f;
+
+        lineRenderer = GetComponentInChildren<LineRenderer>();
+        lineRenderer.positionCount = 2;
+        lineRenderer.enabled = false;
     }
 
     void Update()
@@ -57,34 +73,60 @@ public class BallController : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
+        if (isCharging && canInteract)
+        {
+            Vector3 currentMousePos = Input.mousePosition;
+            Vector3 dragVector = currentMousePos - mousePressDownPos;
+
+            currentPower = dragVector.magnitude * powerMultiplier;
+            currentPower = Mathf.Clamp(currentPower, 0, maxPower);
+
+            powerSlider.value = currentPower;
+
+            Vector3 ballPosition = transform.position;
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(
+                Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.y - ballPosition.y));
+
+            Vector3 direction = mouseWorldPosition - ballPosition;
+            direction.y = 0;
+
+            lineRenderer.enabled = true;
+            lineRenderer.SetPosition(0, ballPosition);
+            lineRenderer.SetPosition(1, ballPosition + direction);
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+        }
+
         if (Input.GetMouseButtonUp(0) && isCharging && canInteract)
         {
-            //Creates a ray starting from the Camera to wherever you click with your mouse
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //a RaycastHit function will be named hit
-            RaycastHit hit;
+            mouseReleasePos = Input.mousePosition;
 
-            //activates the Raycast and through the ray, and saves it inside the hit variable
-            if (Physics.Raycast(ray, out hit))
-            {
-                //if hit.rigidbody has a value then...
-                if (hit.rigidbody != null)
-                {
-                    //it will ad a force to exactly the position you click on the object, requires the direction
-                    //multiplied with the current power and the exact position where it got hit
-                    hit.rigidbody.AddForceAtPosition(ray.direction * currentPower, hit.point);
-                }
-            }
+            Vector3 mousePressWorldPos = Camera.main.ScreenToWorldPoint(
+                new Vector3(mousePressDownPos.x, mousePressDownPos.y, Camera.main.nearClipPlane));
+
+            Vector3 mouseReleaseWorldPos = Camera.main.ScreenToWorldPoint(
+                new Vector3(mouseReleasePos.x, mouseReleasePos.y, Camera.main.nearClipPlane));
+
+
+            Vector3 forceVector = mousePressDownPos - mouseReleasePos;
+            forceVector.y = 0f;
+
+            Vector3 force = forceVector.normalized * currentPower * forceMultiplier;
+            
+            rb.AddForce(force, ForceMode.Impulse);
+
             //if nothing of the things above happend, ischaring equals false
             isCharging = false;
             // and sets Slider back to 0
-            powerSlider.value = 0f;  
+            powerSlider.value = 0f;
         }
         //If you click on the left Mouse Button and isCharging is true...
         if (Input.GetMouseButton(0) && isCharging)
         {
             //...the longer right Mouse Button is clicked, the more power will be added
-            currentPower += Time.deltaTime * maxPower; 
+            currentPower += Time.deltaTime * maxPower;
             //...Limits the current Power to min.0 and max.(the amount of maxPower)
             currentPower = Mathf.Clamp(currentPower, 0f, maxPower);
             //and the slider equals the current Power
@@ -124,18 +166,10 @@ public class BallController : MonoBehaviour
                 //current Power equals 0 at the beginning
                 currentPower = 0f;
 
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+                mousePressDownPos = Input.mousePosition;
 
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.rigidbody != null)
-                    {
-                        hit.rigidbody.AddForceAtPosition(ray.direction * currentPower, hit.point);
-                    }
-                }
+                Debug.Log("Ball clicked!");
             }
-            Debug.Log("Ball clicked!");
         }
         else
         {
