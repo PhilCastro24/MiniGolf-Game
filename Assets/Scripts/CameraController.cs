@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (ballController != null && (ballController.IsMoving() || ballController.isCharging))
+        if (ballController != null && (ballController.IsMoving() || ballController.IsCharging))
         {
             return;
         }

@@ -7,17 +7,19 @@ using UnityEngine.UI;
 public class BallController : MonoBehaviour
 {
     [SerializeField] float maxPower = 100f;
-    [SerializeField] float powerMultiplier = 0.1f;
+    [SerializeField] float powerMultiplier = 1f;
     [SerializeField] float drag = 0.5f;
-    [SerializeField] float stopThreshold = 0.01f;
     [SerializeField] Slider powerSlider;
 
     private LineRenderer aimLine;
     private Vector3 forceDirection;
-    [HideInInspector] public bool isCharging = false;
+    private float currentPower = 0f;
+    private bool isCharging = false;
     private bool canInteract = false;
-
+    private Plane aimPlane;
     private Rigidbody rb;
+
+    public bool IsCharging => isCharging;
 
     void Start()
     {
@@ -52,23 +54,15 @@ public class BallController : MonoBehaviour
         {
             isCharging = true;
             aimLine.enabled = true;
-            forceDirection = Vector3.zero;
+            aimPlane = new Plane(Vector3.up, transform.position);
         }
         else if (Input.GetMouseButton(0) && isCharging)
         {
-            Vector3 ballScreenPos = Camera.main.WorldToScreenPoint(transform.position);
-            Vector3 mouseScreenPos = Input.mousePosition;
-
-            Vector3 direction = (ballScreenPos - mouseScreenPos).normalized;
-            direction.z = 0;
-            forceDirection = direction;
-
-            aimLine.SetPosition(0, transform.position);
-            aimLine.SetPosition(1, transform.position + forceDirection);
+            UpdateAim();
         }
         else if (Input.GetMouseButtonUp(0) && isCharging)
         {
-            rb.AddForce(forceDirection * maxPower * powerMultiplier, ForceMode.Impulse);
+            ApplyForce();
             isCharging = false;
             aimLine.enabled = false;
             powerSlider.value = 0f;
@@ -85,6 +79,29 @@ public class BallController : MonoBehaviour
         }
     }
 
+    private void UpdateAim()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (aimPlane.Raycast(ray, out float distance))
+        {
+            Vector3 aimPoint = ray.GetPoint(distance);
+            forceDirection = (transform.position - aimPoint).normalized;
+
+            float distanceToAim = Vector3.Distance(transform.position, aimPoint);
+            currentPower = Mathf.Clamp(distanceToAim * powerMultiplier, 0, maxPower);
+            powerSlider.value = currentPower;
+
+            aimLine.SetPosition(0, transform.position);
+            aimLine.SetPosition(1, transform.position + forceDirection * currentPower / maxPower);
+        }
+    }
+
+    private void ApplyForce()
+    {
+        rb.AddForce(forceDirection * currentPower, ForceMode.Impulse);
+    }
+
     public void CancelShot()
     {
         isCharging = false;
@@ -94,7 +111,7 @@ public class BallController : MonoBehaviour
 
     public bool IsMoving()
     {
-        return rb.velocity.sqrMagnitude > stopThreshold;
+        return rb.velocity.sqrMagnitude > 0.01f;
     }
 
     private void Restart()
