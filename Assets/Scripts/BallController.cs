@@ -6,18 +6,10 @@ using UnityEngine.UI;
 
 public class BallController : MonoBehaviour
 {
-    Rigidbody rb;
-
-    private bool canInteract = false;
-    private bool isCharging = false;
-
     [SerializeField] float maxPower = 100f;
     [SerializeField] float currentPower = 0f;
     [SerializeField] float powerMultiplier = 0.1f;
     [SerializeField] float forceMultiplier = 1f;
-
-    public Slider powerSlider;
-
     [SerializeField] float minimumSpeed = 0.05f;
     [SerializeField] float stopThreshold = 1f;
     [SerializeField] float drag = 0.5f;
@@ -25,13 +17,13 @@ public class BallController : MonoBehaviour
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
     [SerializeField] Slider powerSlider;
 
-    private bool canInteract = false;
-    private bool isCharging = false;
-
     private LineRenderer lineRenderer;
 
     private Vector3 mousePressDownPos;
     private Vector3 mouseReleasePos;
+
+    private bool canInteract = false;
+    private bool isCharging = false;
 
     Rigidbody rb;
 
