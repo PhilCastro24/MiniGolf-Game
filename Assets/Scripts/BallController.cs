@@ -13,9 +13,15 @@ public class BallController : MonoBehaviour
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
-    public Slider powerSlider;
-    public ParticleSystem BallParticleSystem;
+    [SerializeField] AudioClip hitGolfBallSound;
 
+    public AudioClip holeSound;
+
+    public Slider powerSlider;
+
+    public AudioSource audioSource;
+
+    TrailRenderer trailRenderer;
     Rigidbody rb;
 
     private LineRenderer lineRenderer;
@@ -26,11 +32,12 @@ public class BallController : MonoBehaviour
     private bool canInteract = false;
     private bool isCharging = false;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         lineRenderer = GetComponent<LineRenderer>();
+        trailRenderer = GetComponent<TrailRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         rb.drag = drag;
         rb.angularDrag = drag;
@@ -41,8 +48,8 @@ public class BallController : MonoBehaviour
 
         lineRenderer.positionCount = 2;
         lineRenderer.enabled = false;
+        trailRenderer.enabled = false;
 
-        BallParticleSystem.Stop();
     }
 
     void Update()
@@ -50,17 +57,14 @@ public class BallController : MonoBehaviour
         if (rb.velocity.magnitude <= minimumSpeed && rb.angularVelocity.magnitude <= minimumSpeed)
         {
             canInteract = true;
-            BallParticleSystem.Stop();
+            trailRenderer.enabled = false;
+
         }
         else
         {
             canInteract = false;
+            trailRenderer.enabled = true;
 
-            if (BallParticleSystem != null && rb.velocity.magnitude > 0.01f)
-            {
-                Vector3 oppositeDirection = -rb.velocity.normalized;
-                BallParticleSystem.transform.rotation = Quaternion.LookRotation(oppositeDirection);
-            }
         }
 
         if (rb.velocity.sqrMagnitude < stopThreshold * stopThreshold && rb.angularVelocity.sqrMagnitude < stopThreshold * stopThreshold)
@@ -131,8 +135,8 @@ public class BallController : MonoBehaviour
         Vector3 forceDirection = startPos - endPos;
         forceDirection.Normalize();
         rb.AddForce(forceDirection * currentPower, ForceMode.Impulse);
-
-        BallParticleSystem.Play();
+        trailRenderer.enabled = true;
+        audioSource.PlayOneShot(hitGolfBallSound);
     }
 
     Vector3 GetMouseWorldPosition()
@@ -159,5 +163,9 @@ public class BallController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void PlaySound(AudioClip holeSound)
+    {
+        audioSource.PlayOneShot(holeSound);
+    }
 }
 
