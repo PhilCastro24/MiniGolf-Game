@@ -6,100 +6,93 @@ using UnityEngine.UI;
 
 public class BallController : MonoBehaviour
 {
-    Rigidbody rb;
-
-    private bool canInteract = false;
-    private bool isCharging = false;
-
-    [SerializeField] float maxPower = 100f;
-    [SerializeField] float currentPower = 0f;
-
-    public Slider powerSlider;
-
+    [SerializeField] float maxPower = 20f;
     [SerializeField] float minimumSpeed = 0.05f;
     [SerializeField] float stopThreshold = 1f;
     [SerializeField] float drag = 0.5f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
+    public Slider powerSlider;
+    public ParticleSystem BallParticleSystem;
+
+    Rigidbody rb;
+
+    private LineRenderer lineRenderer;
+    private Vector3 dragStartPos;
+    private Vector3 currentMousePos;
+    private float currentPower = 0f;
+
+    private bool canInteract = false;
+    private bool isCharging = false;
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        lineRenderer = GetComponent<LineRenderer>();
+
         rb.drag = drag;
         rb.angularDrag = drag;
 
         powerSlider.minValue = 0f;
         powerSlider.maxValue = maxPower;
         powerSlider.value = 0f;
+
+        lineRenderer.positionCount = 2;
+        lineRenderer.enabled = false;
+
+        BallParticleSystem.Stop();
     }
 
     void Update()
     {
-        //if velocity and angular drag is under or equal to minSpeed then...
         if (rb.velocity.magnitude <= minimumSpeed && rb.angularVelocity.magnitude <= minimumSpeed)
         {
-            //you can interact with the ball
             canInteract = true;
+            BallParticleSystem.Stop();
         }
         else
         {
-            //othwerwise, if its higher then minSpeed. you cannot interact with the ball
             canInteract = false;
+
+            if (BallParticleSystem != null && rb.velocity.magnitude > 0.01f)
+            {
+                Vector3 oppositeDirection = -rb.velocity.normalized;
+                BallParticleSystem.transform.rotation = Quaternion.LookRotation(oppositeDirection);
+            }
         }
 
-        //if the ball reaches a certain speed and angular drag then...
         if (rb.velocity.sqrMagnitude < stopThreshold * stopThreshold && rb.angularVelocity.sqrMagnitude < stopThreshold * stopThreshold)
         {
-            //velocity equals 0. Means it comes to a full stop
             rb.velocity = Vector3.zero;
-            //same goes for the angular drag
             rb.angularVelocity = Vector3.zero;
         }
 
-        if (Input.GetMouseButtonUp(0) && isCharging && canInteract)
+        if (isCharging)
         {
-            //Creates a ray starting from the Camera to wherever you click with your mouse
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //a RaycastHit function will be named hit
-            RaycastHit hit;
+            currentMousePos = GetMouseWorldPosition();
+            DrawLine(dragStartPos, currentMousePos);
 
-            //activates the Raycast and through the ray, and saves it inside the hit variable
-            if (Physics.Raycast(ray, out hit))
-            {
-                //if hit.rigidbody has a value then...
-                if (hit.rigidbody != null)
-                {
-                    //it will ad a force to exactly the position you click on the object, requires the direction
-                    //multiplied with the current power and the exact position where it got hit
-                    hit.rigidbody.AddForceAtPosition(ray.direction * currentPower, hit.point);
-                }
-            }
-            //if nothing of the things above happend, ischaring equals false
-            isCharging = false;
-            // and sets Slider back to 0
-            powerSlider.value = 0f;  
-        }
-        //If you click on the left Mouse Button and isCharging is true...
-        if (Input.GetMouseButton(0) && isCharging)
-        {
-            //...the longer right Mouse Button is clicked, the more power will be added
-            currentPower += Time.deltaTime * maxPower; 
-            //...Limits the current Power to min.0 and max.(the amount of maxPower)
+            currentPower = Vector3.Distance(dragStartPos, currentMousePos) * maxPower;
             currentPower = Mathf.Clamp(currentPower, 0f, maxPower);
-            //and the slider equals the current Power
             powerSlider.value = currentPower;
 
-            //if you click on the right Mouse Button while left Mouse Button is clicked and isCharging is true...
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                Shoot(dragStartPos, currentMousePos);
+                isCharging = false;
+                powerSlider.value = 0f;
+                lineRenderer.enabled = false;
+            }
+
             if (Input.GetMouseButtonDown(1))
             {
-                //then is charging will be false again...
                 isCharging = false;
-                //Current Power will be 0 again...
                 currentPower = 0f;
-                //same as the Slider Value...
                 powerSlider.value = 0f;
-                //and this Debug.log pops up
+                lineRenderer.enabled = false;
                 Debug.Log("Shot canceled");
             }
         }
@@ -110,38 +103,48 @@ public class BallController : MonoBehaviour
         }
     }
 
-
     void OnMouseDown()
     {
-        //if canInteract is true...
-        if (canInteract)
+        if (Input.GetMouseButtonDown(0) && canInteract)
         {
-            //...following by if Left Mouse Button is clicked and is NOT charging
-            if (Input.GetMouseButtonDown(0) && !isCharging)
-            {
-                //...isCharging gets true
-                isCharging = true;
-                //current Power equals 0 at the beginning
-                currentPower = 0f;
-
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.rigidbody != null)
-                    {
-                        hit.rigidbody.AddForceAtPosition(ray.direction * currentPower, hit.point);
-                    }
-                }
-            }
+            isCharging = true;
+            currentPower = 0f;
+            dragStartPos = GetMouseWorldPosition();
+            lineRenderer.enabled = true;
             Debug.Log("Ball clicked!");
         }
         else
         {
             Debug.Log("Ball still moving");
         }
+    }
 
+    void DrawLine(Vector3 startPos, Vector3 endPos)
+    {
+        lineRenderer.SetPosition(0, transform.position);
+        Vector3 direction = endPos - startPos;
+        lineRenderer.SetPosition(1, transform.position + direction);
+    }
+
+    void Shoot(Vector3 startPos, Vector3 endPos)
+    {
+        Vector3 forceDirection = startPos - endPos;
+        forceDirection.Normalize();
+        rb.AddForce(forceDirection * currentPower, ForceMode.Impulse);
+
+        BallParticleSystem.Play();
+    }
+
+    Vector3 GetMouseWorldPosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, transform.position);
+        float distance;
+        if (plane.Raycast(ray, out distance))
+        {
+            return ray.GetPoint(distance);
+        }
+        return transform.position;
     }
 
     private void OnCollisionEnter(Collision collision)
