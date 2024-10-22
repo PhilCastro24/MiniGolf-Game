@@ -39,9 +39,5 @@ public class CameraController : MonoBehaviour
             cameraTransform.RotateAround(
                 playerTransform.position, Vector3.up, rotationInput * rotationSpeed * Time.deltaTime);
         }
-
-
     }
-
-
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,13 +14,14 @@ public class BallController : MonoBehaviour
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
+    [SerializeField] float jumpForceUp = 5f;
+
     [SerializeField] AudioClip hitGolfBallSound;
 
     public AudioClip holeSound;
+    public AudioSource audioSource;
 
     public Slider powerSlider;
-
-    public AudioSource audioSource;
 
     TrailRenderer trailRenderer;
     Rigidbody rb;
@@ -28,9 +30,12 @@ public class BallController : MonoBehaviour
     private Vector3 dragStartPos;
     private Vector3 currentMousePos;
     private float currentPower = 0f;
+    int totalShots = 5;
 
     private bool canInteract = false;
     private bool isCharging = false;
+
+    SceneController sceneController;
 
     void Start()
     {
@@ -38,6 +43,7 @@ public class BallController : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         trailRenderer = GetComponent<TrailRenderer>();
         audioSource = GetComponent<AudioSource>();
+        sceneController = GetComponent<SceneController>();
 
         rb.drag = drag;
         rb.angularDrag = drag;
@@ -49,7 +55,6 @@ public class BallController : MonoBehaviour
         lineRenderer.positionCount = 2;
         lineRenderer.enabled = false;
         trailRenderer.enabled = false;
-
     }
 
     void Update()
@@ -89,6 +94,13 @@ public class BallController : MonoBehaviour
                 isCharging = false;
                 powerSlider.value = 0f;
                 lineRenderer.enabled = false;
+                totalShots++;
+                Debug.Log("Total Shots: " + totalShots);
+                if (totalShots == 6)
+                {
+                    Debug.Log("You have one Shot left");
+                }
+
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -101,9 +113,21 @@ public class BallController : MonoBehaviour
             }
         }
 
-        if (transform.position.y < lowestYPos)
+        if (transform.position.y <= lowestYPos || totalShots >= 7)
         {
-            Restart();
+            sceneController.Restart();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("JumpObstacle"))
+        {
+            if (rb != null)
+            {
+                Vector3 jumpDirection = Vector3.up * jumpForceUp;
+                rb.AddForce(jumpDirection, ForceMode.Impulse);
+            }
         }
     }
 
@@ -157,10 +181,6 @@ public class BallController : MonoBehaviour
         {
             rb.AddForce(collisionImpulse, ForceMode.Impulse);
         }
-    }
-    void Restart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void PlaySound(AudioClip holeSound)

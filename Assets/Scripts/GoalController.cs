@@ -5,21 +5,32 @@ using UnityEngine.SceneManagement;
 
 public class GoalController : MonoBehaviour
 {
+    [SerializeField] float loadDelay = 3f;
+
     public TimerController timerController;
-    public BallController ballController;
+
+    BallController ballController;
+    SceneController sceneController;
 
     void Start()
     {
         ballController = FindObjectOfType<BallController>();
+        sceneController = FindObjectOfType<SceneController>();
+    }
+
+    IEnumerator DelayBeforeLoadingNextScene()
+    {
+        yield return new WaitForSeconds(loadDelay);
+        sceneController.LoadNextScene();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            StartCoroutine(DelayBeforeLoadingNextScene());
             ballController.PlaySound(ballController.holeSound);
             timerController.StopTimer();
-            //SceneManager.LoadScene(+1);
         }
     }
 }
