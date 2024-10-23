@@ -341,17 +341,17 @@ PrefabInstance:
     - target: {fileID: 5333765160923991191, guid: 5ebe9bea18eec4944aee36dd74928e2c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.739381
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5333765160923991191, guid: 5ebe9bea18eec4944aee36dd74928e2c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.23625442
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5333765160923991191, guid: 5ebe9bea18eec4944aee36dd74928e2c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.655201
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5333765160923991191, guid: 5ebe9bea18eec4944aee36dd74928e2c,
         type: 3}
@@ -882,6 +882,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 700161884}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &803014632 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8010110739330336318, guid: 4544a92f654df744692dbb8782f318d4,
+    type: 3}
+  m_PrefabInstance: {fileID: 717769767144814385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,6 +1499,11 @@ PrefabInstance:
       propertyPath: powerSlider
       value: 
       objectReference: {fileID: 267643347}
+    - target: {fileID: 7817141271458399585, guid: df3859e09254cff40abe3a46c21026e5,
+        type: 3}
+      propertyPath: shotsLeftText
+      value: 
+      objectReference: {fileID: 803014632}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -1070,6 +1070,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4544a92f654df744692dbb8782f318d4, type: 3}
+--- !u!114 &2114822585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8010110739330336318, guid: 4544a92f654df744692dbb8782f318d4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2114822584}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2124364131 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1338453244943817403, guid: 4544a92f654df744692dbb8782f318d4,
@@ -1229,6 +1241,11 @@ PrefabInstance:
       propertyPath: powerSlider
       value: 
       objectReference: {fileID: 399854723}
+    - target: {fileID: 7817141271458399585, guid: df3859e09254cff40abe3a46c21026e5,
+        type: 3}
+      propertyPath: shotsLeftText
+      value: 
+      objectReference: {fileID: 2114822585}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

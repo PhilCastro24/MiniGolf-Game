@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,9 +14,11 @@ public class BallController : MonoBehaviour
     [SerializeField] float drag = 0.5f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
+    [SerializeField] float delayBeforeLoad = 1f;
 
     [SerializeField] float jumpForceUp = 5f;
 
+    [SerializeField] TextMeshProUGUI shotsLeftText;
     [SerializeField] AudioClip hitGolfBallSound;
 
     public AudioClip holeSound;
@@ -30,7 +33,7 @@ public class BallController : MonoBehaviour
     private Vector3 dragStartPos;
     private Vector3 currentMousePos;
     private float currentPower = 0f;
-    int totalShots = 5;
+    int totalShots = 2;//Change back to 7
 
     private bool canInteract = false;
     private bool isCharging = false;
@@ -43,7 +46,7 @@ public class BallController : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         trailRenderer = GetComponent<TrailRenderer>();
         audioSource = GetComponent<AudioSource>();
-        sceneController = GetComponent<SceneController>();
+        sceneController = FindObjectOfType<SceneController>();
 
         rb.drag = drag;
         rb.angularDrag = drag;
@@ -59,6 +62,8 @@ public class BallController : MonoBehaviour
 
     void Update()
     {
+        UpdateShots();
+
         if (rb.velocity.magnitude <= minimumSpeed && rb.angularVelocity.magnitude <= minimumSpeed)
         {
             canInteract = true;
@@ -94,9 +99,9 @@ public class BallController : MonoBehaviour
                 isCharging = false;
                 powerSlider.value = 0f;
                 lineRenderer.enabled = false;
-                totalShots++;
+                totalShots--;
                 Debug.Log("Total Shots: " + totalShots);
-                if (totalShots == 6)
+                if (totalShots == 1)
                 {
                     Debug.Log("You have one Shot left");
                 }
@@ -113,9 +118,9 @@ public class BallController : MonoBehaviour
             }
         }
 
-        if (transform.position.y <= lowestYPos || totalShots >= 7)
+        if (transform.position.y <= lowestYPos || totalShots <= 0)
         {
-            sceneController.Restart();
+            Invoke("RestartScene", delayBeforeLoad);
         }
     }
 
@@ -186,6 +191,16 @@ public class BallController : MonoBehaviour
     public void PlaySound(AudioClip holeSound)
     {
         audioSource.PlayOneShot(holeSound);
+    }
+
+    void UpdateShots()
+    {
+        shotsLeftText.text = "Shots left: " + totalShots;
+    }
+
+    void RestartScene()
+    {
+        sceneController.Restart();
     }
 }
 

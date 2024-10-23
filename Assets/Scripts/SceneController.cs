@@ -29,6 +29,11 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void NewGame()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     public void BackToMenu()
     {
         SceneManager.LoadScene(0);

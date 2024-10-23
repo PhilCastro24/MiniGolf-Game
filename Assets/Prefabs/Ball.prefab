@@ -135,6 +135,7 @@ MonoBehaviour:
   lowestYPos: -10
   collisionImpulse: {x: 5, y: 3, z: 5}
   jumpForceUp: 5
+  shotsLeftText: {fileID: 0}
   hitGolfBallSound: {fileID: 8300000, guid: 692f8f86c2ecc8140b87e7f47f747e30, type: 3}
   holeSound: {fileID: 8300000, guid: 103ed1714ea2f594da6a14b889d24d39, type: 3}
   audioSource: {fileID: 58361474027822142}

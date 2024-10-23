@@ -1534,46 +1534,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Loop
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_MotionVectors
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].time
-      value: 0.99523926
-      objectReference: {fileID: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.017391969
-      objectReference: {fileID: 0}
-    - target: {fileID: 640430305054844801, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].value
-      value: 0.14492798
-      objectReference: {fileID: 0}
     - target: {fileID: 4160628474975631977, guid: df3859e09254cff40abe3a46c21026e5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1624,16 +1584,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4306319208060734604, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306319208060734604, guid: df3859e09254cff40abe3a46c21026e5,
-        type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.63586235
-      objectReference: {fileID: 0}
     - target: {fileID: 4589727151860226918, guid: df3859e09254cff40abe3a46c21026e5,
         type: 3}
       propertyPath: m_Name
@@ -1644,12 +1594,28 @@ PrefabInstance:
       propertyPath: powerSlider
       value: 
       objectReference: {fileID: 267643347}
+    - target: {fileID: 7817141271458399585, guid: df3859e09254cff40abe3a46c21026e5,
+        type: 3}
+      propertyPath: shotsLeftText
+      value: 
+      objectReference: {fileID: 1785013961}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 7988898401629845202, guid: df3859e09254cff40abe3a46c21026e5, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3859e09254cff40abe3a46c21026e5, type: 3}
+--- !u!114 &1785013961 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8010110739330336318, guid: 4544a92f654df744692dbb8782f318d4,
+    type: 3}
+  m_PrefabInstance: {fileID: 717769767144814385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1972668753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,6 +1944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd3251e1ea8dac645a52327b460a0916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadDelay: 3
   timerController: {fileID: 607899162}
 --- !u!1 &2077962386
 GameObject:
