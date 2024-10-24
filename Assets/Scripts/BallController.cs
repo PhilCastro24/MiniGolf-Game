@@ -9,12 +9,13 @@ using UnityEngine.UI;
 public class BallController : MonoBehaviour
 {
     [SerializeField] float maxPower = 20f;
+    [SerializeField] float maxLineLength = 5f;
     [SerializeField] float minimumSpeed = 0.05f;
     [SerializeField] float stopThreshold = 1f;
     [SerializeField] float drag = 0.5f;
     [SerializeField] float lowestYPos = 10f;
-    [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
     [SerializeField] float delayBeforeLoad = 1f;
+    [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
     [SerializeField] float jumpForceUp = 5f;
 
@@ -25,6 +26,8 @@ public class BallController : MonoBehaviour
     public AudioSource audioSource;
 
     public Slider powerSlider;
+    [HideInInspector]
+    public bool isCharging = false;
 
     TrailRenderer trailRenderer;
     Rigidbody rb;
@@ -33,10 +36,10 @@ public class BallController : MonoBehaviour
     private Vector3 dragStartPos;
     private Vector3 currentMousePos;
     private float currentPower = 0f;
-    int totalShots = 2;//Change back to 7
+    int totalShots = 7; //Change back to 7
 
     private bool canInteract = false;
-    private bool isCharging = false;
+
 
     SceneController sceneController;
 
@@ -88,7 +91,14 @@ public class BallController : MonoBehaviour
             currentMousePos = GetMouseWorldPosition();
             DrawLine(dragStartPos, currentMousePos);
 
-            currentPower = Vector3.Distance(dragStartPos, currentMousePos) * maxPower;
+            float distance = Vector3.Distance(dragStartPos, currentMousePos);
+
+            if (distance > maxLineLength)
+            {
+                distance = maxLineLength;
+            }
+
+            currentPower = (distance / maxLineLength) * maxPower;
             currentPower = Mathf.Clamp(currentPower, 0f, maxPower);
             powerSlider.value = currentPower;
 
@@ -154,8 +164,17 @@ public class BallController : MonoBehaviour
 
     void DrawLine(Vector3 startPos, Vector3 endPos)
     {
-        lineRenderer.SetPosition(0, transform.position);
+        Vector3 linePosition = new Vector3(
+            transform.position.x + 0.1f, transform.position.y, transform.position.z);
+
+        lineRenderer.SetPosition(0, linePosition);
         Vector3 direction = endPos - startPos;
+
+        if (direction.magnitude > maxLineLength)
+        {
+            direction = direction.normalized * maxLineLength;
+        }
+
         lineRenderer.SetPosition(1, transform.position + direction);
     }
 

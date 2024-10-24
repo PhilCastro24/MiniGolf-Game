@@ -1243,6 +1243,11 @@ PrefabInstance:
       objectReference: {fileID: 399854723}
     - target: {fileID: 7817141271458399585, guid: df3859e09254cff40abe3a46c21026e5,
         type: 3}
+      propertyPath: maxLineLength
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7817141271458399585, guid: df3859e09254cff40abe3a46c21026e5,
+        type: 3}
       propertyPath: shotsLeftText
       value: 
       objectReference: {fileID: 2114822585}
