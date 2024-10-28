@@ -165,7 +165,7 @@ public class BallController : MonoBehaviour
     void DrawLine(Vector3 startPos, Vector3 endPos)
     {
         Vector3 linePosition = new Vector3(
-            transform.position.x + 0.1f, transform.position.y, transform.position.z);
+            transform.position.x, transform.position.y, transform.position.z);
 
         lineRenderer.SetPosition(0, linePosition);
         Vector3 direction = endPos - startPos;

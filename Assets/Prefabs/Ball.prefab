@@ -129,10 +129,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPower: 15
+  maxLineLength: 0.8
   minimumSpeed: 0.05
   stopThreshold: 1
   drag: 0.5
   lowestYPos: -10
+  delayBeforeLoad: 1
   collisionImpulse: {x: 5, y: 3, z: 5}
   jumpForceUp: 5
   shotsLeftText: {fileID: 0}
@@ -140,6 +142,7 @@ MonoBehaviour:
   holeSound: {fileID: 8300000, guid: 103ed1714ea2f594da6a14b889d24d39, type: 3}
   audioSource: {fileID: 58361474027822142}
   powerSlider: {fileID: 0}
+  isCharging: 0
 --- !u!135 &2928530543416830054
 SphereCollider:
   m_ObjectHideFlags: 0
