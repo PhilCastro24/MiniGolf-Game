@@ -7,6 +7,8 @@ public class SceneController : MonoBehaviour
 {
     public void LoadNextScene()
     {
+        Time.timeScale = 1;
+
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
 
@@ -26,11 +28,13 @@ public class SceneController : MonoBehaviour
 
     public void StartGame()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(1);
     }
 
     public void Restart()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -41,6 +45,7 @@ public class SceneController : MonoBehaviour
 
     public void BackToMenu()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(0);
     }
 }

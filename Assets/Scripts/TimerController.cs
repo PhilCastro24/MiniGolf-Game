@@ -12,11 +12,10 @@ public class TimerController : MonoBehaviour
 
     void Update()
     {
-        if (timerIsRunning)
+        if (timerIsRunning && Time.timeScale > 0f)
         {
             elapsedTime += Time.deltaTime;
             UpdateTimer();
-
         }
     }
 
