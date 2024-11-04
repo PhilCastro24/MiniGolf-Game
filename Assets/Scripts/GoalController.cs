@@ -24,13 +24,14 @@ public class GoalController : MonoBehaviour
         sceneController.LoadNextScene();
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             StartCoroutine(DelayBeforeLoadingNextScene());
             ballController.PlaySound(ballController.holeSound);
             timerController.StopTimer();
+            ballController.hasReachedGoalTrigger = true;
         }
     }
 }

@@ -41,7 +41,7 @@ public class BallController : MonoBehaviour
 
     private bool canInteract = false;
     private bool gameOvertriggered = false;
-
+    public bool hasReachedGoalTrigger = false;
 
     SceneController sceneController;
     TimerController timerController;
@@ -133,7 +133,7 @@ public class BallController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("JumpObstacle"))
         {
@@ -144,6 +144,7 @@ public class BallController : MonoBehaviour
             }
         }
     }
+
     void OnMouseDown()
     {
         if (Input.GetMouseButtonDown(0) && canInteract && totalShots > 0)
@@ -213,7 +214,7 @@ public class BallController : MonoBehaviour
         return transform.position;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {
@@ -253,6 +254,7 @@ public class BallController : MonoBehaviour
             timerController.StopTimer();
         }
     }
+
     IEnumerator WaitForBallToStop()
     {
         float startMovingSpeed = 0.1f;
@@ -260,13 +262,21 @@ public class BallController : MonoBehaviour
         Debug.Log("Waiting for ball to stop moving...");
         while (rb.velocity.magnitude < startMovingSpeed && rb.angularVelocity.magnitude < startMovingSpeed)
         {
-            yield return null; //Waits for the next frame
+            if (hasReachedGoalTrigger)
+            {
+                yield break; // Exit the coroutine if the ball has reached the goal
+            }
+            yield return null; // Waits for the next frame
         }
         Debug.Log("Ball has started Moving.");
         Debug.Log("Waiting for ball to stop moving...");
 
         while (rb.velocity.magnitude > minimumSpeed || rb.angularVelocity.magnitude > minimumSpeed)
         {
+            if (hasReachedGoalTrigger)
+            {
+                yield break; // Exit the coroutine if the ball has reached the goal
+            }
             yield return null;
         }
         Debug.Log("Ball has stopped moving, showing Game Over Panel");
