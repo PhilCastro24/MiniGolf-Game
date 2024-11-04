@@ -10,8 +10,8 @@ public class BallController : MonoBehaviour
 {
     [SerializeField] float maxPower = 20f;
     [SerializeField] float maxLineLength = 5f;
-    [SerializeField] float minimumSpeed = 0.005f;
-    [SerializeField] float stopThreshold = 0.005f;
+    [SerializeField] float minimumSpeed = 0.05f;
+    [SerializeField] float stopThreshold = 0.05f;
     [SerializeField] float drag = 0.2f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] float delayBeforeLoad = 1f;
@@ -178,6 +178,17 @@ public class BallController : MonoBehaviour
 
     void Shoot(Vector3 startPos, Vector3 endPos)
     {
+        float minimumShotPower = 0.1f;
+
+        if (currentPower < minimumShotPower)
+        {
+            Debug.Log("Shot Power too low. Please drag the mouse further to increase Power");
+            isCharging = false;
+            powerSlider.value = 0f;
+            lineRenderer.enabled = false;
+            return;
+        }
+
         Vector3 forceDirection = startPos - endPos;
         forceDirection.Normalize();
         rb.AddForce(forceDirection * currentPower, ForceMode.Impulse);
@@ -256,19 +267,31 @@ public class BallController : MonoBehaviour
     IEnumerator WaitForBallToStop()
     {
         float startMovingSpeed = 0.1f;
+        float maxWaitTime = 5f;
+        float elapsedTime = 0f;
 
         Debug.Log("Waiting for ball to stop moving...");
-        while (rb.velocity.magnitude < startMovingSpeed && rb.angularVelocity.magnitude < startMovingSpeed)
-        {
-            yield return null; //Waits for the next frame
-        }
-        Debug.Log("Ball has started Moving.");
-        Debug.Log("Waiting for ball to stop moving...");
-
-        while (rb.velocity.magnitude > minimumSpeed || rb.angularVelocity.magnitude > minimumSpeed)
+        while ((rb.velocity.magnitude < startMovingSpeed && rb.angularVelocity.magnitude < startMovingSpeed) && elapsedTime < maxWaitTime)
         {
             yield return null;
+            elapsedTime += Time.deltaTime;
         }
+
+        if (elapsedTime > maxWaitTime)
+        {
+            Debug.Log("Ball did not start moving after" + maxWaitTime + " seconds. Proceeding to Game Over.");
+        }
+        else
+        {
+            Debug.Log("Ball has started Moving.");
+            Debug.Log("Waiting for ball to stop moving...");
+
+            while (rb.velocity.magnitude > minimumSpeed || rb.angularVelocity.magnitude > minimumSpeed)
+            {
+                yield return null;
+            }
+        }
+
         Debug.Log("Ball has stopped moving, showing Game Over Panel");
 
         ShowGameOverPanel();
