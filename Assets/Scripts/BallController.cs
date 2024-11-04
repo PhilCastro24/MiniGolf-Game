@@ -87,25 +87,16 @@ public class BallController : MonoBehaviour
             trailRenderer.enabled = true;
         }
 
-        if (rb.velocity.sqrMagnitude < stopThreshold * stopThreshold && rb.angularVelocity.sqrMagnitude < stopThreshold * stopThreshold)
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-
-        if (totalShots <= 0 && !gameOvertriggered)
-        {
-            gameOvertriggered = true;
-            isCharging = false;
-            canInteract = false;
-
-            StartCoroutine(WaitForBallToStop());
-        }
-
         if (transform.position.y <= lowestYPos)
         {
             Invoke("RestartScene", delayBeforeLoad);
         }
+
+        /*if (rb.velocity.sqrMagnitude < stopThreshold * stopThreshold && rb.angularVelocity.sqrMagnitude < stopThreshold * stopThreshold)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }*/
 
         if (isCharging)
         {
@@ -129,12 +120,6 @@ public class BallController : MonoBehaviour
                 isCharging = false;
                 powerSlider.value = 0f;
                 lineRenderer.enabled = false;
-                totalShots--;
-                Debug.Log("Total Shots: " + totalShots);
-                if (totalShots == 1)
-                {
-                    Debug.Log("You have one Shot left");
-                }
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -199,6 +184,21 @@ public class BallController : MonoBehaviour
         trailRenderer.enabled = true;
         audioSource.PlayOneShot(hitGolfBallSound);
         canInteract = false;
+
+        totalShots--;
+        Debug.Log("Total Shots: " + totalShots);
+        if (totalShots == 1)
+        {
+            Debug.Log("One Shot left");
+        }
+        if (totalShots <= 0 && !gameOvertriggered)
+        {
+            gameOvertriggered = true;
+            isCharging = false;
+            canInteract = false;
+
+            StartCoroutine(WaitForBallToStop());
+        }
     }
 
     Vector3 GetMouseWorldPosition()
@@ -242,6 +242,7 @@ public class BallController : MonoBehaviour
         Time.timeScale = 1;
         sceneController.BackToMenu();
     }
+
     void ShowGameOverPanel()
     {
         gameOverPanel.SetActive(true);
@@ -254,12 +255,22 @@ public class BallController : MonoBehaviour
     }
     IEnumerator WaitForBallToStop()
     {
+        float startMovingSpeed = 0.1f;
+
         Debug.Log("Waiting for ball to stop moving...");
-        while (rb.velocity.magnitude > minimumSpeed || rb.angularVelocity.magnitude > minimumSpeed)
+        while (rb.velocity.magnitude < startMovingSpeed && rb.angularVelocity.magnitude < startMovingSpeed)
         {
             yield return null; //Waits for the next frame
         }
-        Debug.Log("Ball has stopped moving");
+        Debug.Log("Ball has started Moving.");
+        Debug.Log("Waiting for ball to stop moving...");
+
+        while (rb.velocity.magnitude > minimumSpeed || rb.angularVelocity.magnitude > minimumSpeed)
+        {
+            yield return null;
+        }
+        Debug.Log("Ball has stopped moving, showing Game Over Panel");
+
         ShowGameOverPanel();
     }
 }
