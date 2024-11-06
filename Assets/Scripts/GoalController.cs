@@ -11,25 +11,42 @@ public class GoalController : MonoBehaviour
 
     BallController ballController;
     LevelManager levelManager;
+    LevelCompleteUI levelCompleteUI;
 
 
     void Start()
     {
         ballController = FindObjectOfType<BallController>();
         levelManager = FindObjectOfType<LevelManager>();
+        levelCompleteUI = FindObjectOfType<LevelCompleteUI>();
+
+        if (levelCompleteUI == null)
+        {
+            Debug.LogError("LevelCompleteUI not found in the Scene!");
+        }
     }
 
-    IEnumerator DelayBeforeLoadingNextScene()
+    IEnumerator DelayBeforeShowingLevelCompleteUI()
     {
         yield return new WaitForSeconds(loadDelay);
-        levelManager.LoadNextLevel();
+
+        if (levelCompleteUI != null)
+        {
+            levelCompleteUI.ShowLevelCompleteUI();
+        }
+        else
+        {
+            Debug.LogError("LevelCompleteUI is null");
+            levelManager.LoadNextLevel();
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            StartCoroutine(DelayBeforeLoadingNextScene());
+            StartCoroutine(DelayBeforeShowingLevelCompleteUI());
             ballController.PlaySound(ballController.holeSound);
             timerController.StopTimer();
         }

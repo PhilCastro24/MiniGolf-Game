@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class LevelManager : MonoBehaviour
 {
     public GameObject[] levels;
@@ -13,7 +13,6 @@ public class LevelManager : MonoBehaviour
     SceneController sceneController;
     BallController ballController;
     TimerController timerController;
-
     void Start()
     {
         sceneController = FindObjectOfType<SceneController>();

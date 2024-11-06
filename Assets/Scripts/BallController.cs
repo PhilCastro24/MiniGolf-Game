@@ -14,9 +14,9 @@ public class BallController : MonoBehaviour
     [SerializeField] float drag = 0.2f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] float delayBeforeLoad = 1f;
-    [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
-
     [SerializeField] float jumpForceUp = 5f;
+
+    [SerializeField] private Vector3 collisionImpulse = new Vector3(5, 3, 5);
 
     [SerializeField] GameObject gameOverPanel;
     [SerializeField] TextMeshProUGUI shotsLeftText;
@@ -24,9 +24,9 @@ public class BallController : MonoBehaviour
 
     public AudioClip holeSound;
     public AudioSource audioSource;
-
     public Slider powerSlider;
     [HideInInspector]
+
     public bool isCharging = false;
 
     TrailRenderer trailRenderer;
@@ -36,7 +36,8 @@ public class BallController : MonoBehaviour
     private Vector3 dragStartPos;
     private Vector3 currentMousePos;
     private float currentPower = 0f;
-    int totalShots = 7; //Change back to 7
+    int totalShots = 2; //Change back to 7
+
 
     private bool canInteract = false;
     private bool gameOvertriggered = false;
@@ -44,6 +45,8 @@ public class BallController : MonoBehaviour
 
     SceneController sceneController;
     TimerController timerController;
+    LevelManager levelManager;
+    LevelCompleteUI levelCompleteUI;
 
     void Awake()
     {
@@ -56,6 +59,13 @@ public class BallController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         sceneController = FindObjectOfType<SceneController>();
         timerController = FindObjectOfType<TimerController>();
+        levelManager = FindObjectOfType<LevelManager>();
+        levelCompleteUI = FindObjectOfType<LevelCompleteUI>();
+
+        if (levelCompleteUI == null)
+        {
+            Debug.LogError("LevelCompleteUI not found in the scene!");
+        }
 
 
         rb.drag = drag;
@@ -266,7 +276,7 @@ public class BallController : MonoBehaviour
             timerController.StopTimer();
         }
     }
-    IEnumerator WaitForBallToStop()
+    public IEnumerator WaitForBallToStop()
     {
         float startMovingSpeed = 0.1f;
         float maxWaitTime = 5f;
