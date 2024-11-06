@@ -8,6 +8,9 @@ TagManager:
   - Goal
   - Obstacle
   - JumpObstacle
+  - Terrain
+  - StartPosition
+  - StartPoint
   layers:
   - Default
   - TransparentFX

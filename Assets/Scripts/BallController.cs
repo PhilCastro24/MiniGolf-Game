@@ -11,7 +11,6 @@ public class BallController : MonoBehaviour
     [SerializeField] float maxPower = 20f;
     [SerializeField] float maxLineLength = 5f;
     [SerializeField] float minimumSpeed = 0.05f;
-    [SerializeField] float stopThreshold = 0.05f;
     [SerializeField] float drag = 0.2f;
     [SerializeField] float lowestYPos = 10f;
     [SerializeField] float delayBeforeLoad = 1f;
@@ -37,7 +36,7 @@ public class BallController : MonoBehaviour
     private Vector3 dragStartPos;
     private Vector3 currentMousePos;
     private float currentPower = 0f;
-    int totalShots = 2; //Change back to 7
+    int totalShots = 7; //Change back to 7
 
     private bool canInteract = false;
     private bool gameOvertriggered = false;
@@ -46,9 +45,12 @@ public class BallController : MonoBehaviour
     SceneController sceneController;
     TimerController timerController;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+    void Start()
+    {
         lineRenderer = GetComponent<LineRenderer>();
         trailRenderer = GetComponent<TrailRenderer>();
         audioSource = GetComponent<AudioSource>();
@@ -295,6 +297,22 @@ public class BallController : MonoBehaviour
         Debug.Log("Ball has stopped moving, showing Game Over Panel");
 
         ShowGameOverPanel();
+    }
+
+    public void ResetVelocity()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    public void ResetForNewLevel()
+    {
+        ResetVelocity();
+        isCharging = false;
+        canInteract = true;
+        //Reset this to 7
+        totalShots = 7;
+        UpdateShots();
     }
 }
 

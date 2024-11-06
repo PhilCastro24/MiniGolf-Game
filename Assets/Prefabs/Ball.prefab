@@ -131,12 +131,13 @@ MonoBehaviour:
   maxPower: 15
   maxLineLength: 0.8
   minimumSpeed: 0.05
-  stopThreshold: 1
+  stopThreshold: 0.05
   drag: 0.5
   lowestYPos: -10
   delayBeforeLoad: 1
   collisionImpulse: {x: 5, y: 3, z: 5}
   jumpForceUp: 5
+  gameOverPanel: {fileID: 0}
   shotsLeftText: {fileID: 0}
   hitGolfBallSound: {fileID: 8300000, guid: 692f8f86c2ecc8140b87e7f47f747e30, type: 3}
   holeSound: {fileID: 8300000, guid: 103ed1714ea2f594da6a14b889d24d39, type: 3}
@@ -267,7 +268,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 8
-    numCapVertices: 0
+    numCapVertices: 8
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}

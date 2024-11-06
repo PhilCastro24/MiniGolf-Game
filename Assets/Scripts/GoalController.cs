@@ -10,18 +10,19 @@ public class GoalController : MonoBehaviour
     public TimerController timerController;
 
     BallController ballController;
-    SceneController sceneController;
+    LevelManager levelManager;
+
 
     void Start()
     {
         ballController = FindObjectOfType<BallController>();
-        sceneController = FindObjectOfType<SceneController>();
+        levelManager = FindObjectOfType<LevelManager>();
     }
 
     IEnumerator DelayBeforeLoadingNextScene()
     {
         yield return new WaitForSeconds(loadDelay);
-        sceneController.LoadNextScene();
+        levelManager.LoadNextLevel();
     }
 
     private void OnTriggerEnter(Collider other)
