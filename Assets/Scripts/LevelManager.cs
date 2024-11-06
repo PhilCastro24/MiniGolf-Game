@@ -74,6 +74,5 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log("No more levels");
         }
-
     }
 }

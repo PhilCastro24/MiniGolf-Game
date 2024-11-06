@@ -1,5 +1,58 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2070287513834309140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6553488153099677196}
+  - component: {fileID: 1791871071157535191}
+  m_Layer: 0
+  m_Name: CameraBoundaries
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6553488153099677196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070287513834309140}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.40599996, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3624254684589336803}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1791871071157535191
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070287513834309140}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 14.102395, y: 0.9922584, z: 2.952599}
+  m_Center: {x: -0.95839167, y: 0.91577524, z: -2.5055444}
 --- !u!1 &2287443974742462623
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 2300502058817489985}
   serializedVersion: 2
   m_LocalRotation: {x: 0.1550333, y: -0.68990195, z: 0.1550333, w: 0.68990195}
-  m_LocalPosition: {x: 5.615789, y: 0.31574678, z: -2.5}
+  m_LocalPosition: {x: 4.625788, y: 0.4457466, z: -3.6800003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -292,6 +345,7 @@ Transform:
   m_Children:
   - {fileID: 1854301377120272568}
   - {fileID: 4015709077161643987}
+  - {fileID: 6553488153099677196}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5618260564494532808
@@ -318,6 +372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4015709077161643987}
   - component: {fileID: 5917151223604573193}
+  - component: {fileID: 7605111220252698324}
   m_Layer: 0
   m_Name: Virtual Camera
   m_TagString: Untagged
@@ -334,7 +389,7 @@ Transform:
   m_GameObject: {fileID: 8773106463407268607}
   serializedVersion: 2
   m_LocalRotation: {x: 0.1550333, y: -0.68990195, z: 0.1550333, w: 0.68990195}
-  m_LocalPosition: {x: 5.615789, y: 0.31574678, z: -2.5}
+  m_LocalPosition: {x: 4.625788, y: 0.4457466, z: -3.6800003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -380,3 +435,20 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 5443962983759340985}
+--- !u!114 &7605111220252698324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8773106463407268607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2fba25a5cd15594e8f050a11e386c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ConfineMode: 1
+  m_BoundingVolume: {fileID: 1791871071157535191}
+  m_BoundingShape2D: {fileID: 0}
+  m_ConfineScreenEdges: 1
+  m_Damping: 0
